@@ -1,62 +1,40 @@
-# Switch OC Suite
+# Switch OC Revitalized
 
-[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
-[![Downloads](https://img.shields.io/github/downloads/hanai3Bi/Switch-OC-Suite/total)](https://github.com/hanai3Bi/Switch-OC-Suite/releases)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL_v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![Downloads](https://img.shields.io/github/downloads/Cod3xDev/Switch-OC-Revitalized/total)](https://github.com/Cod3xDev/Switch-OC-Revitalized/releases)
 
- 
-     
+---
 
-한국어 : [Korean](https://github.com/hanai3Bi/Switch-OC-Suite/blob/master/README_kr.md)
+**Disclaimer: Use at your own risk!**
 
-This project is very dangerous and can possibly damage your console. Therefore I do not recommend using this project. If you decide to use it, USE AT YOUR OWN RISK. THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND.
+This project introduces an Overclocking Suite for Nintendo Switch consoles running Atmosphere CFW. Please be aware that utilizing this suite carries inherent risks, as it can potentially harm your console. It is strongly advised not to proceed unless you fully understand the implications. By choosing to use this software, you do so at your own risk, as it is provided "AS IS," without any warranty.
 
-Overclocking Suite for Nintendo Switch consoles running Atmosphere CFW.
+---
 
-[Project Homepage](https://hanai3Bi.github.io/Switch-OC-Suite)
+## Overview
 
-**DISCLAIMER: USE AT YOUR OWN RISK!**
+Switch OC Revitalized is an overclocking solution designed to enhance the performance of Nintendo Switch consoles operating with Atmosphere Custom Firmware. The project aims to provide users with additional control over CPU, GPU, and DRAM frequencies, though it comes with inherent risks and potential hardware damage.
 
-- Overclocking in general will shorten the lifespan of some hardware components. **YOU ARE RESPONSIBLE for any problem or potential damage** if unsafe frequencies are ENABLED in sys-clk-OC. Issues like asking for bypassing limit will BE IGNORED OR CLOSED WITHOUT REPLY.
+---
 
-- Due to HorizonOS design, instabilities from unsafe RAM clocks may cause filesystem corruption. **Always make backup before enabling DRAM OC.**
+## License
 
-## Features
+This project is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html). Please review the license terms before proceeding.
 
-- Erista variant (HAC-001)
-  - CPU / GPU Overclock (Safe: 1785 / 921 MHz)
-    - Unsafe
-      - Due to the limit of board power draw or power IC
-      - Unlockable frequencies up to 2091 / 998 MHz
-      - See [README for sys-clk-OC](https://github.com/hanai3Bi/Switch-OC-Suite/blob/master/Source/sys-clk-OC/README.md)
+---
 
-  - DRAM Overclock (Safe: 1862.4 MHz)
+## Project Resources
 
-- Mariko variant (HAC-001-01, HDH-001, HEG-001)
-  - CPU / GPU Overclock (Safe: 1963 / 998 MHz)
-    - Unsafe
-      - Due to the limit of board power draw or power IC
-      - Unlockable frequencies up to 2295 / 1267 MHz
-      - See [README for sys-clk-OC](https://github.com/hanai3Bi/Switch-OC-Suite/blob/master/Source/sys-clk-OC/README.md)
+- **Project Homepage:** [Switch OC Revitalized](https://cod3xdev.github.io/Switch-OC-Revitalized)
+- **Downloads:** [Latest Releases](https://github.com/Cod3xDev/Switch-OC-Revitalized/releases)
 
-  - DRAM Overclock (Safe: 1996.8 MHz)
-
-- Modded sys-clk
-  - Global Profile
-    - Designated a dummy title id `0xA111111111111111`.
-    - Priority: "Temp overrides" > "Application profile" > "Global profile" > "System default".
-  - Real Voltage readings (CPU/GPU/RAM)
-  - Bug Fixes
-
-- **[System Settings (Optional)](https://github.com/hanai3Bi/Switch-OC-Suite/blob/master/system_settings.md)**
-
+---
 
 ## Installation
 
-1. Download latest [release](https://github.com/hanai3Bi/Switch-OC-Suite/releases).
-
-2. Grab `x.x.x_loader.kip` for your Atmosphere version, rename it to `loader.kip` and place it in `/atmosphere/kips/`.
-
-3. (optional) You can customize via [online loader configurator](https://hanai3Bi.github.io/Switch-OC-Suite/#config):
+1. Download the latest [release](https://github.com/Cod3xDev/Switch-OC-Revitalized/releases).
+2. Obtain `x.x.x_loader.kip` for your Atmosphere version, rename it to `loader.kip`, and place it in `/atmosphere/kips/`.
+3. [Optional] Customize settings via the [online loader configurator](https://cod3xdev.github.io/Switch-OC-Revitalized/#config).
     <details>
 
     | Defaults   | Mariko        | Erista        |
@@ -72,48 +50,44 @@ Overclocking Suite for Nintendo Switch consoles running Atmosphere CFW.
 
     </details>
 
-4. Hekate-ipl bootloader (fss0) Only  (Not required for AMS fusee)
-   - At boot entry section in `bootloader/hekate_ipl.ini`, Add `kip1=atmosphere/kips/loader.kip` to any line that works.
+4. For Hekate-ipl bootloader (fss0) only (Not required for AMS fusee), add `kip1=atmosphere/kips/loader.kip` to any boot entry in `bootloader/hekate_ipl.ini`.
+5. Install [sys-clk-oc](https://github.com/Cod3xDev/Switch-OC-Revitalized/releases/latest/download/sys-clk-oc.zip).
 
-5. Install [sys-clk-oc](https://github.com/hanai3Bi/Switch-OC-Suite/releases/latest/download/sys-clk-oc.zip)
-   - official [sys-clk](https://github.com/retronx-team/sys-clk/releases) (2.0.0+) is compatible, but not recommended (no bugfixes or additional features).
-
-6. (optional) Copy SdOut.zip for useful utilities.
+---
 
 ## Updating via AIO
 
-1. Download and copy custom_packs.json to /config/aio-switch-updater/custom_packs.json
+1. Download and copy `custom_packs.json` to `/config/aio-switch-updater/custom_packs.json`.
+2. Launch AIO Switch Updater and go to the Custom Downloads tab.
+3. Select Switch OC Revitalized and press Continue.
 
-2. Launch AIO Switch Updater and go to Custom Downloads tab
-
-3. Select Switch-OC-Suite and press Contiune 
-
+---
 
 ## Build
 
 <details>
 
-1. Copy Switch-OC-Suite files into Atmosphere folder. 
-
-2. Before compiling, run `patch.py` in `Atmosphere/stratosphere/loader/source/` to insert oc module into loader sysmodule.
-
+1. Copy Switch OC Revitalized files into the Atmosphere folder.
+2. Run `patch.py` in `Atmosphere/stratosphere/loader/source/` to insert the OC module into the loader sysmodule.
 3. Compile Atmosphere loader with devkitpro.
-
-4. When compilation is done, uncompress the kip to make it work with configurator: `hactool -t kip1 Atmosphere/stratosphere/loader/out/nintendo_nx_arm64_armv8a/release/loader.kip --uncompress=./loader.kip`
+4. After compilation, uncompress the kip: `hactool -t kip1 Atmosphere/stratosphere/loader/out/nintendo_nx_arm64_armv8a/release/loader.kip --uncompress=./loader.kip`
 
 </details>
 
+---
 
-## Acknowledgement
+## Acknowledgments
 
-- CTCaer for [Hekate-ipl](https://github.com/CTCaer/hekate) bootloader, RE and hardware research
-- [devkitPro](https://devkitpro.org/) for All-In-One homebrew toolchains
-- masagrator for [ReverseNX-RT](https://github.com/masagrator/ReverseNX-RT) and info on BatteryChargeInfoFields in psm module
-- Nvidia for [Tegra X1 Technical Reference Manual](https://developer.nvidia.com/embedded/dlc/tegra-x1-technical-reference-manual)
-- RetroNX team for [sys-clk](https://github.com/retronx-team/sys-clk)
-- SciresM and Reswitched Team for the state-of-the-art [Atmosphere](https://github.com/Atmosphere-NX/Atmosphere) CFW of Switch
-- Switchbrew [wiki](http://switchbrew.org/wiki/) for Switch in-depth info
-- Switchroot for their [modified L4T kernel and device tree](https://gitlab.com/switchroot/kernel)
-- ZatchyCatGames for RE and original OC loader patches for Atmosphere
-- KazushiMe for [Switch-OC-Suite](https://github.com/KazushiMe/Switch-OC-Suite)
-- lineon for research and help
+- CTCaer for [Hekate-ipl](https://github.com/CTCaer/hekate) bootloader, RE, and hardware research.
+- [devkitPro](https://devkitpro.org/) for All-In-One homebrew toolchains.
+- masagrator for [ReverseNX-RT](https://github.com/masagrator/ReverseNX-RT) and information on BatteryChargeInfoFields in psm module.
+- Nvidia for [Tegra X1 Technical Reference Manual](https://developer.nvidia.com/embedded/dlc/tegra-x1-technical-reference-manual).
+- RetroNX team for [sys-clk](https://github.com/retronx-team/sys-clk).
+- SciresM and Reswitched Team for the state-of-the-art [Atmosphere](https://github.com/Atmosphere-NX/Atmosphere) CFW of Switch.
+- Switchbrew [wiki](http://switchbrew.org/wiki/) for Switch in-depth info.
+- Switchroot for their [modified L4T kernel and device tree](https://gitlab.com/switchroot/kernel).
+- ZatchyCatGames for RE and original OC loader patches for Atmosphere.
+- KazushiMe for [Switch OC Revitalized](https://github.com/Cod3xDev/Switch-OC-Revitalized).
+- lineon for research and help.
+
+---
