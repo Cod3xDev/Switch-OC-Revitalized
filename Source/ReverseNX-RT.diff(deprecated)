@@ -1,0 +1,287 @@
+diff --git a/Overlay/Makefile b/Overlay/Makefile
+index 9656834..3b2ebd5 100644
+--- a/Overlay/Makefile
++++ b/Overlay/Makefile
+@@ -38,7 +38,7 @@ include $(DEVKITPRO)/libnx/switch_rules
+ #   NACP building is skipped as well.
+ #---------------------------------------------------------------------------------
+ APP_TITLE	:=	ReverseNX-RT
+-APP_VERSION	:=	1.1.1
++APP_VERSION	:=	1.1.1-OC
+ 
+ TARGET		:=	ReverseNX-RT-ovl
+ BUILD		:=	build
+diff --git a/Overlay/source/main.cpp b/Overlay/source/main.cpp
+index 810295c..2b3aa52 100644
+--- a/Overlay/source/main.cpp
++++ b/Overlay/source/main.cpp
+@@ -1,7 +1,202 @@
+ #define TESLA_INIT_IMPL // If you have more than one file using the tesla header, only define this in the main one
+ #include <tesla.hpp>    // The Tesla Header
++#include <atomic>
+ #include "SaltyNX.h"
+ 
++class ModeSync {
++public:
++	enum ReverseNXMode {
++		ReverseNX_NotValid = 0,
++		ReverseNX_SystemDefault = 0,
++		ReverseNX_Handheld,
++		ReverseNX_Docked,
++		ReverseNX_Undefined,
++	};
++
++	void SetMode(bool isDefault, bool setDock, char* descBuf, size_t bufSize) {
++		auto changeHandler = [this](ReverseNXMode newMode) {
++			if (this->currentMode == ReverseNX_Undefined || this->currentMode != newMode) {
++				if (R_FAILED(this->ipc->SetMode(newMode))) {
++					this->ipc->ipcStatus = Ipc::IpcStatus_ConnectFailed;
++					return;
++				}
++				this->currentMode = newMode;
++			}
++		};
++
++		tsl::hlp::ScopeGuard updateBufGuard([&] { this->ipc->UpdateStatusDesc(descBuf, bufSize); });
++
++		if (isDefault) {
++			changeHandler(ReverseNX_SystemDefault);
++			return;
++		}
++
++		changeHandler(setDock ? ReverseNX_Docked : ReverseNX_Handheld);
++	}
++
++	ModeSync() {
++		this->ipc = new Ipc;
++		this->ipc->Init();
++	}
++
++	~ModeSync() {
++		this->ipc->Exit();
++		delete this->ipc;
++	}
++
++protected:
++	struct Ipc {
++		#define API_VER 2
++		#define SERVICE_NAME "sysclkOC"
++
++		enum SysClkIpcCmd {
++			SysClkIpcCmd_GetApiVersion = 0,
++			SysClkIpcCmd_GetConfigValues = 9,
++			SysClkIpcCmd_SetReverseNXRTMode = 11,
++		};
++
++		enum SysClkConfigValue {
++			SysClkConfigValue_SyncReverseNXMode = 4,
++			SysClkConfigValue_EnumMax = 8,
++		};
++
++		struct SysClkConfigValueList {
++			uint64_t values[SysClkConfigValue_EnumMax];
++		};
++
++		enum IpcStatus {
++			IpcStatus_OK,
++
++			IpcStatus_Unknown,
++			IpcStatus_NotRunning,
++			IpcStatus_InitFailed,
++			IpcStatus_ConnectFailed,
++			IpcStatus_UnsupportedVer,
++
++			IpcStatus_Count,
++		};
++
++		static constexpr const char* IpcStatusStr[IpcStatus_Count] = {
++			"",
++
++			"Unknown",
++			"Err: Not running",
++			"Err: Failed to init",
++			"Err: Failed to connect",
++			"Err: Unsupported version",
++		};
++
++		Result Init() {
++			Result rc = 0;
++
++			rc = IpcInitialize();
++
++			rc = GetStatus();
++			
++			return rc;
++		}
++
++		void Exit() {
++			if (--refCnt == 0)
++				serviceClose(&service);
++		}
++
++		bool IsServiceRunning() {
++			Handle handle;
++			SmServiceName name = smEncodeName(SERVICE_NAME);
++			if (R_FAILED(smRegisterService(&handle, name, false, 1))) {
++				return true;
++			}
++			svcCloseHandle(handle);
++			smUnregisterService(name);
++			return false;
++		}
++
++		Result IpcInitialize(void) {
++			Result rc = 0;
++			refCnt++;
++
++			if (serviceIsActive(&service))
++				return 0;
++
++			rc = smGetService(&service, SERVICE_NAME);
++
++			if (R_FAILED(rc)) {
++				this->ipcStatus = IpcStatus_InitFailed;
++				rc = this->ipcStatus;
++				this->Exit();
++				return rc;
++			}
++
++			return rc;
++		}
++
++		Result GetApiVersion(u32* outVer) {
++			return serviceDispatchOut(&service, SysClkIpcCmd_GetApiVersion, *outVer);
++		}
++
++		Result GetConfigValues(SysClkConfigValueList* outConfigValues) {
++			return serviceDispatchOut(&service, SysClkIpcCmd_GetConfigValues, *outConfigValues);
++		}
++
++		Result SetMode(ReverseNXMode mode) {
++			return serviceDispatchIn(&service, SysClkIpcCmd_SetReverseNXRTMode, mode);
++		}
++
++		Result GetStatus() {
++			if (!IsServiceRunning()) {
++				this->ipcStatus = IpcStatus_NotRunning;
++				return this->ipcStatus;
++			}
++
++			tsl::hlp::ScopeGuard exitSrvGuard([&] { this->Exit(); });
++
++			uint32_t api_ver;
++			if (R_FAILED(GetApiVersion(&api_ver))) {
++				this->ipcStatus = IpcStatus_ConnectFailed;
++				return this->ipcStatus;
++			}
++
++			if (api_ver != API_VER) {
++				this->ipcStatus = IpcStatus_UnsupportedVer;
++				return this->ipcStatus;
++			}
++
++			SysClkConfigValueList* list = new SysClkConfigValueList;
++			tsl::hlp::ScopeGuard listGuard([&] { delete list; });
++
++			if (R_FAILED(GetConfigValues(list))) {
++				this->ipcStatus = IpcStatus_ConnectFailed;
++				return this->ipcStatus;
++			}
++
++			exitSrvGuard.dismiss();
++
++			shouldSync = bool(list->values[SysClkConfigValue_SyncReverseNXMode]);
++			this->ipcStatus = IpcStatus_OK;
++			return this->ipcStatus;
++		}
++
++		void UpdateStatusDesc(char* buffer, size_t size) {
++			snprintf(buffer, size,
++				"Mode Sync: %s%s",
++				IpcStatusStr[ipcStatus],
++				(ipcStatus == IpcStatus_OK) ? (
++					shouldSync ? "ON" : "OFF"
++				) : ""
++			);
++		}
++
++		Service service = {};
++		std::atomic<std::size_t> refCnt = 0;
++		IpcStatus ipcStatus = IpcStatus_Unknown;
++		bool shouldSync = false;
++	};
++
++	Ipc* ipc = nullptr;
++	ReverseNXMode currentMode = ReverseNX_Undefined;
++};
++
+ bool* def = 0;
+ bool* isDocked = 0;
+ bool* pluginActive = 0;
+@@ -17,6 +212,7 @@ bool plugin = false;
+ char DockedChar[32];
+ char SystemChar[32];
+ char PluginChar[36];
++char SysclkChar[0x40];
+ uint64_t PID = 0;
+ Handle remoteSharedMemory = 1;
+ SharedMemory _sharedmemory = {};
+@@ -73,7 +269,7 @@ bool CheckPort () {
+ 
+ class GuiTest : public tsl::Gui {
+ public:
+-	GuiTest(u8 arg1, u8 arg2, bool arg3) { }
++	GuiTest(ModeSync* p) : modeSync(p) { }
+ 
+ 	// Called when this Gui gets loaded to create the UI
+ 	// Allocate all elements on the heap. libtesla will make sure to clean them up when not needed anymore
+@@ -112,6 +308,7 @@ public:
+ 				else {
+ 					renderer->drawString(SystemChar, false, x, y+40, 20, renderer->a(0xFFFF));
+ 					renderer->drawString(DockedChar, false, x, y+60, 20, renderer->a(0xFFFF));
++					renderer->drawString(SysclkChar, false, x, y+80, 20, renderer->a(0xFFFF));
+ 				}
+ 			}
+ 	}), 100);
+@@ -190,6 +387,8 @@ public:
+ 				
+ 				if (_def) sprintf(SystemChar, "Controlled by system: Yes");
+ 				else sprintf(SystemChar, "Controlled by system: No");
++			
++				modeSync->SetMode(_def, _isDocked, SysclkChar, sizeof(SysclkChar));
+ 			}
+ 			else i++;
+ 		}
+@@ -200,6 +399,8 @@ public:
+ 	virtual bool handleInput(u64 keysDown, u64 keysHeld, const HidTouchState &touchPos, HidAnalogStickState joyStickPosLeft, HidAnalogStickState joyStickPosRight) override {
+ 		return false;   // Return true here to singal the inputs have been consumed
+ 	}
++
++	ModeSync* modeSync;
+ };
+ 
+ class OverlayTest : public tsl::Overlay {
+@@ -248,9 +449,11 @@ public:
+ 		
+ 		});
+ 	
++		modeSync = new ModeSync;
+ 	}  // Called at the start to initialize all services necessary for this Overlay
+ 	
+ 	virtual void exitServices() override {
++		delete modeSync;
+ 		shmemClose(&_sharedmemory);
+ 		fsdevUnmountDevice("sdmc");
+ 	}  // Callet at the end to clean up all services previously initialized
+@@ -260,8 +463,10 @@ public:
+ 	virtual void onHide() override {}    // Called before overlay wants to change from visible to invisible state
+ 
+ 	virtual std::unique_ptr<tsl::Gui> loadInitialGui() override {
+-		return initially<GuiTest>(1, 2, true);  // Initial Gui to load. It's possible to pass arguments to it's constructor like this
++		return initially<GuiTest>(modeSync);  // Initial Gui to load. It's possible to pass arguments to it's constructor like this
+ 	}
++
++	ModeSync* modeSync = nullptr;
+ };
+ 
+ int main(int argc, char **argv) {
