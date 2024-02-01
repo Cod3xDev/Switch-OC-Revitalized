@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang=en>
+	<meta charset=UTF-8>
+	<meta name=viewport content="width=device-width,initial-scale=1">
+	<title>Switch OC Revitalized | Overclocking suite for Horizon OS (HOS) running on Atmosphere CFW. Licensed under GPL v2.</title>
+	<meta name=description content="Overclocking suite for Horizon OS (HOS) running on Atmosphere CFW. Licensed under GPL v2.">
+	<link rel=stylesheet href=https://unpkg.com/@picocss/pico@latest/css/pico.min.css>
+	<style>
+		#nav-list {
+			display: none
+		}
+
+		#nav-popup {
+			display: unset
+		}
+
+		@media (min-width:768px) {
+			#nav-list {
+				display: unset
+			}
+
+			#nav-popup {
+				display: none
+			}
+		}
+
+		details[open]>summary:not([role]):not(:focus) {
+			color: unset
+		}
+
+		div.hero>nav.container-fluid {
+			position: fixed;
+			top: 0;
+			z-index: 99;
+			-webkit-backdrop-filter: blur(20px);
+			backdrop-filter: blur(20px)
+		}
+
+		div.hero>header {
+			padding-top: 6rem
+		}
+
+		button[role=tab] {
+			border-radius: 0;
+			border-left-width: calc(var(--border-width)/ 2);
+			border-right-width: calc(var(--border-width)/ 2)
+		}
+
+		button[role=tab]:first-child {
+			border-top-left-radius: var(--border-radius);
+			border-bottom-left-radius: var(--border-radius);
+			border-left-width: var(--border-width)
+		}
+
+		button[role=tab]:last-child {
+			border-top-right-radius: var(--border-radius);
+			border-bottom-right-radius: var(--border-radius);
+			border-right-width: var(--border-width)
+		}
+
+		button[role=tab]:not(.outline) {
+			pointer-events: none;
+			cursor: default
+		}
+
+		div.cust-element {
+			margin: 1.5rem 0 1.5rem 0
+		}
+
+		div.cust-element>blockquote,
+		div.cust-element>blockquote>ul {
+			margin: 0;
+			font-size: calc(var(--font-size) * .8);
+			color: var(--muted-color)
+		}
+
+		div#download_btn_grid>a {
+			margin: .5rem 0
+		}
+	</style>undefined<div class=hero>
+		<nav class=container-fluid>
+			<ul>
+				<li>
+					<a href=#head class=contrast>
+						<b>Switch OC Revitalized</b>
+					</a>
+			</ul>
+			<ul id=nav-popup>
+				<li>
+					<details role=list dir=rtl>
+						<summary aria-haspopup=group role=link class=contrast>Jump to</summary>
+						<ul role=group>
+							<li>
+								<a href=#readme>README</a>
+							<li>
+								<a href=#download>Download</a>
+							<li>
+								<a href=#config>Configurator</a>
+							<li>
+								<a href=https://github.com/Cod3xDev/Switch-OC-Revitalized target=_blank>GitHub repository</a>
+						</ul>
+					</details>
+			</ul>
+			<ul id=nav-list>
+				<li>
+					<a href=#readme>README</a>
+				<li>
+					<a href=#download>Download</a>
+				<li>
+					<a href=#config>Config</a>
+				<li>
+					<a href=https://github.com/Cod3xDev/Switch-OC-Revitalized target=_blank>GitHub</a>
+			</ul>
+		</nav>
+		<header class=container>
+			<hgroup>
+				<h1>Switch OC Revitalized</h1>
+				<h2>Overclocking suite for Horizon OS (HOS) running on Atmosphere CFW. Licensed under GPL v2.</h2>
+			</hgroup>
+		</header>
+	</div>
+	<section aria-label=README id=readme>
+		<div class=container>
+			<article>
+				<header>
+					<hgroup>
+						<h2>README</h2>
+						<h3>🚨DISCLAIMER: THIS IS PROVIDED AS IS. USE AT YOUR OWN RISK!🚨</h3>
+					</hgroup>
+					<ul>
+						<li>Overclocking in general will shorten the lifespan of some hardware components. <strong>YOU ARE RESPONSIBLE for any problem or potential damage</strong> if unsafe frequencies are ENABLED in sys-clk-OC. Issues like asking for bypassing limit will BE IGNORED OR CLOSED WITHOUT REPLY.
+						<li>Due to HorizonOS design, instabilities from unsafe RAM clocks may cause filesystem corruption. <strong>Always make backup before enabling DRAM OC.</strong>
+					</ul>
+				</header>
+				<h3>Features</h3>
+				<details open>
+					<summary>For Erista variant (HAC-001)</summary>
+					<ul>
+						<li>CPU Overclock (Safe: 1785 MHz) <ul>
+								<li>Unsafe <ul>
+										<li>Due to the limit of board power draw or power IC
+										<li>Unlockable frequencies up to 2091 MHz
+										<li>See <a href=https://github.com/Cod3xDev/Switch-OC-Revitalized/blob/master/Source/sys-clk-OC/README.md target=_blank>README for sys-clk-OC</a>
+									</ul>
+							</ul>
+						<li>DRAM Overclock (Safe: 1862.4 MHz)
+					</ul>
+				</details>
+				<details open>
+					<summary>For Mariko variant (HAC-001-01, HDH-001, HEG-001)</summary>
+					<ul>
+						<li>CPU / GPU Overclock (Safe: 1963 / 998 MHz) <ul>
+								<li>Unsafe <ul>
+										<li>Due to the limit of board power draw or power IC
+										<li>Unlockable frequencies up to 2295 / 1267 MHz
+										<li>See <a href=https://github.com/Cod3xDev/Switch-OC-Revitalized/blob/master/Source/sys-clk-OC/README.md target=_blank>README for sys-clk-OC</a>
+									</ul>
+							</ul>
+						<li>DRAM Overclock (Safe: 1996.8 MHz)
+					</ul>
+				</details>
+				<details open>
+					<summary>Modded sys-clk and ReverseNX-RT</summary>
+					<ul>
+						<li style=text-decoration:line-through>Auto CPU Boost <ul>
+								<li>For faster game loading
+								<li>Enable CPU Boost (1785 MHz) when CPU Core#3 (System Core) is stressed (mainly I/O operations).
+								<li>Effective only when charger is connected or governor is enabled.
+								<li>This feature is considered unsafe on Erista, especially when combined with high GPU frequency or with governor enabled.
+							</ul>
+						<li style=text-decoration:line-through>CPU &amp; GPU frequency governor (Experimental) <ul>
+								<li>Adjust frequency based on load. Might decrease power draw but can introduce stutters. Can be turned off for specific titles.
+							</ul>
+						<li style=text-decoration:line-through>Set charging current (100 mA - 2000 mA) and charging limit (20% - 100%) <ul>
+								<li>Long-term use of charge limit may render the battery gauge inaccurate. Performing full cycles could help recalibration, or try <a href=https://github.com/CTCaer/battery_desync_fix_nx>battery_desync_fix_nx</a>.
+							</ul>
+						<li>Global Profile <ul>
+								<li>Designated a dummy title id <code>0xA111111111111111</code>.
+								<li>Priority: "Temp overrides" &gt; "Application profile" &gt; "Global profile" &gt; "System default".
+							</ul>
+						<li style=text-decoration:line-through>Sync ReverseNX Mode <ul>
+								<li>No need to change clocks manually after toggling modes in ReverseNX (-RT and -Tool)
+							</ul>
+					</ul>
+				</details>
+				<details open>
+					<summary>System Settings (Optional)</summary>See <a href=https://github.com/Cod3xDev/Switch-OC-Revitalized/blob/master/system_settings.md>system_settings.md</a>
+				</details>
+				<h3 id=installation open>Installation</h3>
+				<ol type=1>
+					<li>Download latest <a href=#download>release</a>.
+					<li>Grab <code>x.x.x_loader.kip</code> for your Atmosphere version, rename it to <code>loader.kip</code> and place it in <code>/atmosphere/kips/</code>.
+					<li>(optional) You can customize via <a href=#config>online loader configurator</a>
+						<table role=grid>
+							<thead>
+								<tr>
+									<th>Defaults
+									<th>Mariko
+									<th>Erista
+							<tbody>
+								<tr>
+									<td>CPU OC
+									<td>2295 MHz Max
+									<td>2091 MHz Max
+								<tr>
+									<td>CPU Boost
+									<td>1785 MHz
+									<td>N/A
+								<tr>
+									<td>CPU Volt
+									<td>1235 mV Max
+									<td>1235 mV Max
+								<tr>
+									<td>GPU OC
+									<td>1267 MHz Max
+									<td>998 MHz Max
+								<tr>
+									<td>RAM OC
+									<td>1996 MHz
+									<td>1862 MHz
+								<tr>
+									<td>RAM Volt
+									<td>Disabled
+									<td>Disabled
+								<tr>
+									<td>RAM Timing
+									<td>Auto-Adjusted
+									<td>Auto-Adjusted
+								<tr>
+									<td>CPU UV
+									<td>Disabled
+									<td>N/A
+								<tr>
+									<td>GPU UV
+									<td>Disabled
+									<td>N/A
+						</table>
+					<li>Hekate-ipl bootloader Only (fss0) (Not required for AMS fusee) <ul>
+							<li>At boot entry section in <code>bootloader/hekate_ipl.ini</code>, Add <code>kip1=atmosphere/kips/loader.kip</code> to any line that works.
+						</ul>
+					<li>Install [sys-clk-oc] <br>official [sys-clk] (2.0.0+) is compatible but not recommended (no bugfixes or additional features).
+					<li>(optional) Copy SdOut.zip for useful utilities.
+				</ol>
+				<details>
+					<summary>How to build this project</summary>
+					<ol type=1>
+						<li>Grab necessary patches from the repo, then compile sys-clk, ReverseNX-RT and Atmosphere loader with devkitpro.
+						<li>Before compiling Atmosphere loader, run <code>patch.py</code> in <code>Atmosphere/stratosphere/loader/source/</code> to insert oc module into loader sysmodule.
+						<li>When compilation is done, uncompress the kip to make it work with configurator: <code>hactool -t kip1 Atmosphere/stratosphere/loader/out/nintendo_nx_arm64_armv8a/release/loader.kip --uncompress=./loader.kip</code>
+					</ol>
+				</details>
+				<h3 id=faq>Frequently Asked Questions</h3>
+				<details open>
+					<summary>How to enable unsafe frequencies in sys-clk-OC?</summary>
+					<ul>
+						<li>Above all else, you should know <a href=#readme>what "unsafe" means and issues might arise</a>.
+						<li>See the end of <a href=https://github.com/Cod3xDev/Switch-OC-Revitalized/blob/master/Source/sys-clk-OC/README.md target=_blank>README in sys-clk-OC</a>. Place this line <code>allow_unsafe_freq=1</code> under <code>[values]</code> section in <code>/config/sys-clk/config.ini</code>
+					</ul>
+				</details>
+				<details open>
+					<summary>I would like to bypass limit enforced in sys-clk to improve handheld performance without charger connected.</summary>
+					<ul>
+						<li>Bypassing clock cappings will be bad for battery.
+						<li>See the end of <a href=https://github.com/Cod3xDev/Switch-OC-Revitalized/blob/master/Source/sys-clk-OC/README.md target=_blank>README in sys-clk-OC</a>. Place this line <code>uncapped_clocks=1</code> under <code>[values]</code> section in <code>/config/sys-clk/config.ini</code>
+					</ul>
+				</details>
+				<footer>
+					<details role=list>
+						<summary aria-haspopup=group role=button class=secondary>Acknowledgement</summary>
+						<ul role=group>
+							<li>undefined<a href=https://github.com/CTCaer/hekate target=_blank>CTCaer for Hekate-ipl bootloader, RE and hardware research</a>undefined
+							<li>undefined<a href=https://devkitpro.org/ target=_blank>devkitPro for All-In-One homebrew toolchains</a>undefined
+							<li>undefined<a href=https://github.com/masagrator/ReverseNX-RT target=_blank>masagrator for ReverseNX-RT and info on BatteryChargeInfoFields in psm module</a>undefined
+							<li>undefined<a href=https://developer.nvidia.com/embedded/dlc/tegra-x1-technical-reference-manual target=_blank>Nvidia for Tegra X1 Technical Reference Manual</a>undefined
+							<li>undefined<a href=https://github.com/retronx-team/sys-clk target=_blank>RetroNX team for sys-clk</a>undefined
+							<li>undefined<a href=https://github.com/Atmosphere-NX/Atmosphere target=_blank>SciresM and Reswitched Team for the state-of-the-art Atmosphere CFW of Switch</a>undefined
+							<li>undefined<a href=http://switchbrew.org/wiki/ target=_blank>Switchbrew wiki for Switch in-depth info</a>undefined
+							<li>undefined<a href=https://gitlab.com/switchroot/kernel target=_blank>Switchroot for their modified L4T kernel and device tree</a>undefined
+							<li>ZatchyCatGames for RE and original OC loader patches for Atmosphereundefined
+							<li>undefined<a href=https://github.com/KazushiMe/Switch-OC-Suite target=_blank>KazushiMe for original Switch-OC-Suite</a>undefined
+							<li>lineon for research and helpundefined
+						</ul>undefined
+					</details>undefined
+				</footer>undefined
+			</article>undefined
+		</div>undefined
+	</section>undefined<section aria-label=Download id=download>undefined<div class=container>undefined<article>undefined<header>undefined<hgroup>undefined<h2>Download</h2>undefined<h3>Get latest version of Switch OC Revitalized and its corresponding Atmosphere package here.</h3>undefined</hgroup>undefined</header>undefined<div class=grid id=download_btn_grid>undefined<a role=button aria-busy=true id=loader_kip_btn>Generating link, please wait...</a>undefined<a role=button aria-busy=true id=sdout_zip_btn>Generating link, please wait...</a>undefined<a target=_blank role=button aria-busy=true id=ams_btn>Generating link, please wait...</a>undefined</div>undefined<footer>See undefined<a href=#installation>Installation section</a> for how to use Switch OC Revitalized.undefined</footer>undefined</article>undefined</div>undefined</section>undefined<section aria-label=Config id=config>undefined<div class=container>undefined<article>undefined<header>undefined<hgroup>undefined<h2>Configurator</h2>undefined<h3>Configure frequencies and voltages to suit your hardware and preferences.</h3>undefined</hgroup>undefined</header>undefined<form id=form>undefined<nav role=tablist>undefined<button type=button role=tab id=tab_all data-platform=0 disabled>All</button>undefined<button type=button role=tab class=outline id=tab_erista data-platform=1 disabled>Erista</button>undefined<button type=button role=tab class=outline id=tab_mariko data-platform=2 disabled>Mariko</button>undefined</nav>undefined<label for=file>undefined<input id=file type=file>undefined<small id=cust_rev>Upload loader.kip here</small>undefined</label>undefined<div id=config-list-basic></div>undefined<div id=config-list-advanced></div>undefined<div id=config-list-gpu></div>undefined</form>undefined<footer>undefined<div class=grid>undefined<button type=button id=load_default role=button disabled>Load Default</button>undefined<button type=button id=load_saved role=button disabled>Load Last Saved</button>undefined<button type=submit id=save role=button disabled>Save</button>undefined</div>undefined</footer>undefined</article>undefined</div>undefined</section>undefined<footer class=container>undefined<small>Build with undefined<a href=https://picocss.com target=_blank>Pico</a>. All trademarks, logos and brand names are the property of their respective owners, used for identification purposes only.undefined</small>undefined</footer>undefined<script src=./main.js></script>
