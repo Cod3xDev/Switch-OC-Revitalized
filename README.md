@@ -87,7 +87,8 @@ This project is licensed under the [GNU General Public License v3.0](https://www
 - Switchbrew [wiki](http://switchbrew.org/wiki/) for Switch in-depth info.
 - Switchroot for their [modified L4T kernel and device tree](https://gitlab.com/switchroot/kernel).
 - ZatchyCatGames for RE and original OC loader patches for Atmosphere.
-- KazushiMe for [Switch OC Revitalized](https://github.com/Cod3xDev/Switch-OC-Revitalized).
+- KazushiMe for [Switch OC Suite](https://github.com/KazushiMe/Switch-OC-Suite).
+- hanai3Bi for Updating [Switch OC Suite](https://github.com/hanai3Bi/Switch-OC-Suite/).
 - lineon for research and help.
 
 ---
