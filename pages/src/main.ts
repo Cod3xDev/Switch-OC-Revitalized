@@ -834,7 +834,7 @@ class ReleaseInfo {
   sysclkOCAsset: ReleaseAsset
   sdOutZipAsset: ReleaseAsset;
 
-  readonly ocLatestApi = "https://api.github.com/repos/hanai3Bi/Switch-OC-Suite/releases/latest";
+  readonly ocLatestApi = "https://api.github.com/repos/cod3xdev/Switch-OC-Revitalized/releases/latest";
 
   async load() {
     try {
